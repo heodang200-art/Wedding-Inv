@@ -1,5 +1,5 @@
 import { useState, useEffect, FormEvent } from 'react';
-import { Calendar, MapPin, Users, Heart, ClipboardCheck, ArrowUpRight, CheckCircle2 } from 'lucide-react';
+import { Calendar, MapPin, Users, Heart, ClipboardCheck, ArrowUpRight, CheckCircle2, Sparkles, Clock, Bell } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 // Import our database and service handles
@@ -15,22 +15,22 @@ const WEDDING_EVENTS: WeddingEventDetails[] = [
   {
     title: "LỄ VU QUY (Nhà Gái)",
     side: 'bride',
-    time: "09:00 - Chủ Nhật, 21/06/2026",
-    dateTimestamp: new Date("2026-06-21T09:00:00").getTime(),
-    venueName: "FPT Software",
-    address: "FPT Software",
-    mapEmbedUrl: "https://maps.google.com/maps?q=FPT%20Software&t=&z=13&ie=UTF8&iwloc=&output=embed",
-    mapDirectionsUrl: "https://share.google/tCcNenRx7xY264oD6"
+    time: "09:00 - Thứ Tư, 01/07/2026",
+    dateTimestamp: new Date("2026-07-01T09:00:00").getTime(),
+    venueName: "Trung Tâm Hội Nghị Tiệc Cưới Võ Gia Palace",
+    address: "Trung Tâm Hội Nghị Tiệc Cưới Võ Gia Palace",
+    mapEmbedUrl: "https://maps.google.com/maps?q=V%C3%B5%20Gia%20Palace&t=&z=14&ie=UTF8&iwloc=&output=embed",
+    mapDirectionsUrl: "https://maps.app.goo.gl/LzkGFLyXbs935gvB8"
   },
   {
     title: "LỄ THÀNH HÔN (Nhà Trai)",
     side: 'groom',
-    time: "11:30 - Chủ Nhật, 21/06/2026",
-    dateTimestamp: new Date("2026-06-21T11:30:00").getTime(),
-    venueName: "FPT Software",
-    address: "FPT Software",
-    mapEmbedUrl: "https://maps.google.com/maps?q=FPT%20Software&t=&z=13&ie=UTF8&iwloc=&output=embed",
-    mapDirectionsUrl: "https://share.google/tCcNenRx7xY264oD6"
+    time: "11:00 - Thứ Tư, 01/07/2026",
+    dateTimestamp: new Date("2026-07-01T11:00:00").getTime(),
+    venueName: "Trung Tâm Hội Nghị Tiệc Cưới Võ Gia Palace",
+    address: "Trung Tâm Hội Nghị Tiệc Cưới Võ Gia Palace",
+    mapEmbedUrl: "https://maps.google.com/maps?q=V%C3%B5%20Gia%20Palace&t=&z=14&ie=UTF8&iwloc=&output=embed",
+    mapDirectionsUrl: "https://maps.app.goo.gl/LzkGFLyXbs935gvB8"
   }
 ];
 
@@ -398,30 +398,57 @@ export default function CountdownRSVP({ weddingDateTimestamp }: CountdownRSVPPro
                   </button>
                 </form>
               ) : (
-                /* Confetti celebration success screen */
-                <div id="rsvp-success-screen" className="flex flex-col items-center justify-center text-center py-10 px-4 animate-scale-up h-full my-auto">
-                  <div className="w-16 h-16 bg-green-50 rounded-full border border-green-200 flex items-center justify-center text-green-600 mb-6 shrink-0 shadow-inner">
-                    <CheckCircle2 className="w-10 h-10" />
+                /* Confetti celebration success screen with Live Schedule Notification */
+                <div id="rsvp-success-screen" className="flex flex-col items-center justify-center text-center py-6 px-4 animate-scale-up h-full my-auto text-stone-800">
+                  <div className="w-14 h-14 bg-green-50 rounded-full border border-green-200 flex items-center justify-center text-green-600 mb-4 shrink-0 shadow-inner">
+                    <CheckCircle2 className="w-9 h-9" />
                   </div>
-                  <h3 className="font-serif text-2xl font-bold text-rose-950 mb-3">Xác Nhận Thành Công!</h3>
-                  <div className="bg-stone-50 border border-stone-200 rounded-2xl p-5 mb-6 text-xs text-stone-600 leading-relaxed max-w-sm">
-                    <p className="font-medium text-stone-800 mb-1">Thông tin đã được ghi nhận bảo mật:</p>
+                  <h3 className="font-serif text-2xl font-bold text-rose-950 mb-2">Xác Nhận Thành Công!</h3>
+                  
+                  <div className="bg-stone-50 border border-stone-200 rounded-2xl p-4 mb-4 text-[11px] text-stone-600 leading-relaxed w-full max-w-sm text-left">
+                    <p className="font-semibold text-stone-800 mb-1">Thông tin đã ghi nhận bảo mật:</p>
                     <p>Khách mời: <span className="font-bold text-rose-950">{name}</span></p>
                     <p>Phía: <span className="font-semibold">{side === 'bride' ? 'Cô Dâu' : side === 'groom' ? 'Chú Rể' : 'Cả Hai Bên'}</span></p>
                     <p>Trạng thái: <span className="font-semibold text-green-600">Sẽ có mặt ({guestCount} người)</span></p>
-                    {wishes && <p className="italic mt-2 text-stone-400 font-light border-t border-stone-200/50 pt-2 shrink text-[11px]">"{wishes}"</p>}
+                    {wishes && <p className="italic mt-1.5 text-stone-400 font-light border-t border-stone-200/50 pt-1.5">"{wishes}"</p>}
                   </div>
-                  <p className="text-xs text-stone-500 font-light leading-relaxed mb-6">
-                    Mọi ý kiến của bạn đều được mã hóa tối đa để bảo vệ thông tin trước bên thứ ba. Hẹn gặp lại quý khách tại ngày vui của chúng tôi!
-                  </p>
 
-                  <button
-                    id="btn-rsvp-reset"
-                    onClick={handleResetForm}
-                    className="px-5 py-2.5 bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-semibold rounded-xl transition-all cursor-pointer border border-stone-300"
-                  >
-                    Gửi xác nhận mới
-                  </button>
+                  {/* 🔔 HIGH QUALITY LIVE SCHEDULE TRACKING NOTIFICATION CARD 🔔 */}
+                  <div className="bg-amber-50/90 border border-amber-300/60 rounded-2xl p-4 mb-5 text-left max-w-sm shadow-sm relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-12 h-12 bg-amber-500/10 rounded-full blur-xl"></div>
+                    <div className="flex gap-2.5 items-start">
+                      <div className="w-8 h-8 rounded-full bg-amber-500/20 text-amber-800 flex items-center justify-center shrink-0 mt-0.5">
+                        <Bell className="w-4 h-4 animate-bounce" />
+                      </div>
+                      <div>
+                        <h4 className="text-xs font-bold text-amber-950 flex items-center gap-1.5">
+                          <Sparkles className="w-3.5 h-3.5 text-amber-600" /> Theo Dõi Lịch Trình Live!
+                        </h4>
+                        <p className="text-[11px] text-amber-900/80 leading-relaxed mt-1 font-light">
+                          Đại gia đình đã mở tính năng <strong>Theo dõi Lịch trình Đám cưới Trực tiếp (Live)</strong>. Quý khách có thể xem thời gian xuất phát, làm lễ, khai tiệc và các nội dung cập nhật thực tế ngay trên thiết bị cầm tay.
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <button
+                      id="btn-rsvp-success-to-schedule"
+                      type="button"
+                      onClick={() => { window.location.hash = '#schedule'; }}
+                      className="w-full mt-3 py-2 bg-rose-950 hover:bg-rose-950 text-amber-200 hover:text-white rounded-xl text-[11px] font-bold text-center transition-all cursor-pointer shadow flex items-center justify-center gap-1.5"
+                    >
+                      <Clock className="w-3.5 h-3.5" /> Xem Lịch Trình Trực Tiếp Ngay 🔔
+                    </button>
+                  </div>
+
+                  <div className="flex gap-2 w-full max-w-sm justify-center">
+                    <button
+                      id="btn-rsvp-reset"
+                      onClick={handleResetForm}
+                      className="flex-1 py-2 bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-semibold rounded-xl transition-all cursor-pointer border border-stone-300"
+                    >
+                      Gửi xác nhận mới
+                    </button>
+                  </div>
                 </div>
               )}
             </div>

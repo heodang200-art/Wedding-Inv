@@ -4,35 +4,26 @@ import { Camera, Eye, ChevronLeft, ChevronRight, X } from 'lucide-react';
 const ALBUM_IMAGES = [
   {
     id: 'img_1',
-    url: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=1000&auto=format&fit=crop&q=80',
+    url: 'Album.jpg',
     title: 'Nắm Tay Nhau Đi Suốt Cuộc Đời'
   },
   {
     id: 'img_2',
-    url: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=1000&auto=format&fit=crop&q=80',
+    url: 'Album 2.jpg',
     title: 'Nét Cười Rạng Rỡ Ngày Chung Đôi'
   },
   {
     id: 'img_3',
-    url: 'https://images.unsplash.com/photo-1519225495810-7512c696505a?w=1000&auto=format&fit=crop&q=80',
+    url: 'Album 3.jpg',
     title: 'Biển Chiều Bình Yên'
-  },
-  {
-    id: 'img_4',
-    url: 'https://images.unsplash.com/photo-1532712938310-34cb3982ef74?w=1000&auto=format&fit=crop&q=80',
-    title: 'Kỷ Niệm Đẹp Đẽ Trao Nhẫn Cưới'
-  },
-  {
-    id: 'img_5',
-    url: 'https://images.unsplash.com/photo-1606800052052-a08af7148866?w=1000&auto=format&fit=crop&q=80',
-    title: 'Nguyện Ước Trọng Đời'
-  },
-  {
-    id: 'img_6',
-    url: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=1000&auto=format&fit=crop&q=80',
-    title: 'Phút Giây Hạnh Phúc Ngọt Ngào'
   }
 ];
+
+const FALLBACK_IMAGES: Record<string, string> = {
+  'Album.jpg': 'https://images.unsplash.com/photo-1519741497674-611481863552?w=1000&auto=format&fit=crop&q=80',
+  'Album 2.jpg': 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=1000&auto=format&fit=crop&q=80',
+  'Album 3.jpg': 'https://images.unsplash.com/photo-1519225495810-7512c696505a?w=1000&auto=format&fit=crop&q=80'
+};
 
 export default function PhotoAlbum() {
   const [activeImageIdx, setActiveImageIdx] = useState<number | null>(null);
@@ -77,6 +68,10 @@ export default function PhotoAlbum() {
               alt={img.title}
               className="w-full h-full object-cover filter brightness-95 group-hover:scale-108 transition-all duration-700" 
               referrerPolicy="no-referrer"
+              onError={(e) => {
+                const fb = FALLBACK_IMAGES[img.url];
+                if (fb) e.currentTarget.src = fb;
+              }}
             />
             
             {/* Overlay background details */}
@@ -131,6 +126,10 @@ export default function PhotoAlbum() {
                 alt={ALBUM_IMAGES[activeImageIdx].title} 
                 className="max-w-full max-h-full object-contain rounded-xl shadow-2xl border border-white/5"
                 referrerPolicy="no-referrer"
+                onError={(e) => {
+                  const fb = FALLBACK_IMAGES[ALBUM_IMAGES[activeImageIdx].url];
+                  if (fb) e.currentTarget.src = fb;
+                }}
               />
             </div>
 
@@ -150,7 +149,7 @@ export default function PhotoAlbum() {
               {ALBUM_IMAGES[activeImageIdx].title}
             </h4>
             <p className="text-[11px] text-stone-400 mt-1 uppercase font-mono tracking-widest">
-              Cô Dâu ❤️ Chú Rể Trường Xuân
+              Cô Dâu Thanh Như ❤️ Chú Rể Lê Nguyên
             </p>
           </div>
 

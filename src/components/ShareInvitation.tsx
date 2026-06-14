@@ -18,7 +18,7 @@ export default function ShareInvitation() {
 
 Trân trọng kính mời: ${guestName.trim() || 'Quý khách'}
 
-Trường Xuân & Cô Dâu rất vinh hạnh và kính mời sự có mặt đồng hành cùng ngày vui trọng đại cưới hỏi của chúng tôi. Sự hiện diện của bạn là niềm hạnh phúc lớn nhất của đại gia đình!
+Lê Nguyên & Thanh Như rất vinh hạnh và kính mời sự có mặt đồng hành cùng ngày vui trọng đại cưới hỏi của chúng tôi. Sự hiện diện của bạn là niềm hạnh phúc lớn nhất của đại gia đình!
 
 👉 Xin vui lòng xem đầy đủ sơ đồ đường đi Nhà Trai/Nhà Gái, Album ảnh cưới lãng mạn và gửi phản hồi xác nhận tham dự (RSVP) tại link thiệp điện tử bảo mật sau nhé:
 🔗 ${invitationUrl}
@@ -39,7 +39,7 @@ Trân trọng kính mời! ❤️`;
 
   const handleShareZalo = () => {
     // Standard Zalo share portal
-    const url = `https://sp.zalo.me/share_to_zalo?url=${encodeURIComponent(invitationUrl)}&title=${encodeURIComponent('Thiệp cưới online Trường Xuân & Cô Dâu')}`;
+    const url = `https://sp.zalo.me/share_to_zalo?url=${encodeURIComponent(invitationUrl)}&title=${encodeURIComponent('Thiệp cưới online Lê Nguyên & Thanh Như')}`;
     window.open(url, '_blank');
   };
 

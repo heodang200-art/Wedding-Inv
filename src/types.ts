@@ -43,3 +43,14 @@ export interface SongTrack {
   url: string;
   fallbackUrl?: string;
 }
+
+export interface ScheduleItem {
+  id: string;
+  time: string; // e.g. "08:30"
+  title: string;
+  desc: string;
+  location?: string;
+  icon?: string; // lucide icon name
+  status: 'upcoming' | 'ongoing' | 'completed';
+}
+

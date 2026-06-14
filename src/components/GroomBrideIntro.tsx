@@ -43,10 +43,13 @@ export default function GroomBrideIntro({ groom, bride }: IntroProps) {
             {/* Elegant avatar container */}
             <div className="w-44 h-44 rounded-full p-1.5 border-2 border-amber-500/30 shadow-xl overflow-hidden mb-6 bg-white shrink-0">
               <img 
-                src="https://images.unsplash.com/photo-1519741497674-611481863552?w=500&auto=format&fit=crop&q=80" 
+                src={groom.avatar} 
                 alt="Chú rể" 
                 className="w-full h-full object-cover rounded-full filter brightness-95 scale-102 hover:scale-110 transition-transform duration-700"
                 referrerPolicy="no-referrer"
+                onError={(e) => {
+                  e.currentTarget.src = "https://images.unsplash.com/photo-1519741497674-611481863552?w=500&auto=format&fit=crop&q=80";
+                }}
               />
             </div>
             
@@ -90,10 +93,13 @@ export default function GroomBrideIntro({ groom, bride }: IntroProps) {
             {/* Elegant avatar container */}
             <div className="w-44 h-44 rounded-full p-1.5 border-2 border-amber-500/30 shadow-xl overflow-hidden mb-6 bg-white shrink-0">
               <img 
-                src="https://images.unsplash.com/photo-1549417229-aa67d3263c09?w=500&auto=format&fit=crop&q=80" 
+                src={bride.avatar} 
                 alt="Cô dâu" 
                 className="w-full h-full object-cover rounded-full filter brightness-95 scale-102 hover:scale-110 transition-transform duration-700"
                 referrerPolicy="no-referrer"
+                onError={(e) => {
+                  e.currentTarget.src = "https://images.unsplash.com/photo-1549417229-aa67d3263c09?w=500&auto=format&fit=crop&q=80";
+                }}
               />
             </div>
             

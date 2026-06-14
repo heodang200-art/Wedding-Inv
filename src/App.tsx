@@ -11,11 +11,13 @@ import PhotoAlbum from './components/PhotoAlbum';
 import ShareInvitation from './components/ShareInvitation';
 import GuestManager from './components/GuestManager';
 import MusicPlayer from './components/MusicPlayer';
+import LiveSchedule from './components/LiveSchedule';
 import { WeddingCoupleInfo } from './types';
 
 export default function App() {
   const [invitedGuest, setInvitedGuest] = useState<string>('');
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [currentPage, setCurrentPage] = useState<'invitation' | 'schedule'>('invitation');
 
   // Parse custom invitee parameter '?to=name'
   useEffect(() => {
@@ -30,7 +32,23 @@ export default function App() {
       setShowScrollTop(window.scrollY > 800);
     };
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+
+    // Hash routing listener
+    const handleHashChange = () => {
+      if (window.location.hash === '#schedule') {
+        setCurrentPage('schedule');
+        window.scrollTo({ top: 0 });
+      } else {
+        setCurrentPage('invitation');
+      }
+    };
+    handleHashChange(); // Run once at load
+    window.addEventListener('hashchange', handleHashChange);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('hashchange', handleHashChange);
+    };
   }, []);
 
   const handleScrollToSection = (sectionId: string) => {
@@ -42,13 +60,13 @@ export default function App() {
 
   // Pre-configured couple bios
   const groomInfo: WeddingCoupleInfo = {
-    name: "Đoàn Trường Xuân",
-    shortName: "Trường Xuân",
-    avatar: "https://images.unsplash.com/photo-1519741497674-611481863552?w=500&auto=format&fit=crop&q=80",
+    name: "Võ Lê Nguyên",
+    shortName: "Lê Nguyên",
+    avatar: "Groom.jpg",
     father: "",
     mother: "",
-    birthdate: "1997",
-    description: "Một lập trình viên yêu nghệ thuật, thích khám phá và mong muốn cùng Cô Dâu viết nên một chương mới tràn ngập niềm vui.",
+    birthdate: "2002 - Quê Quảng Ngãi",
+    description: "Đi qua những con đường gập ghềnh sỏi đá, sẽ luôn có một biển hoa đợi bạn ở phía trước!!",
     bankName: "Ngân hàng Thương mại Cổ phần Ngoại thương Việt Nam (Vietcombank)",
     bankAccount: "1133668899",
     bankBranch: "Chi nhánh Hà Nội",
@@ -56,24 +74,64 @@ export default function App() {
   };
 
   const brideInfo: WeddingCoupleInfo = {
-    name: "Cô Dâu",
-    shortName: "Cô Dâu",
-    avatar: "https://images.unsplash.com/photo-1549417229-aa67d3263c09?w=500&auto=format&fit=crop&q=80",
+    name: "Trịnh Thị Thanh Như",
+    shortName: "Thanh Như",
+    avatar: "Bride.jpg",
     father: "",
     mother: "",
-    birthdate: "1999",
-    description: "Nhà thiết kế đồ họa mộng mơ, yêu mến sự yên bình và tin rằng tình yêu đích thực luôn bắt nguốn từ những thấu hiểu giản đơn.",
+    birthdate: "2001 - Quê Bình Dương",
+    description: "Sống chill một chút, trời thương một chút 🥰",
     bankName: "Ngân hàng Cổ phần Quân đội (MB bank)",
     bankAccount: "9988776655",
     bankBranch: "Chi nhánh Đà Nẵng",
     qrCodeUrl: "https://api.vietqr.io/image/970422-9988776655-qr_only.png?accountName=CO%2520DAU&amount=1000000"
   };
 
-  const weddingDateTimestamp = new Date("2026-06-21T11:30:00").getTime();
+  const weddingDateTimestamp = new Date("2026-07-01T11:00:00").getTime();
+
+  if (currentPage === 'schedule') {
+    return (
+      <div className="min-h-screen bg-stone-50 text-stone-800 font-sans relative selection:bg-amber-100 selection:text-rose-950">
+        <MusicPlayer />
+        <LiveSchedule onBackToInvitation={() => { window.location.hash = ''; }} />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-stone-50 text-stone-800 font-sans relative selection:bg-amber-100 selection:text-rose-950">
       
+      {/* 🚀 STICKY CORE HEADER / NAVIGATION 🚀 */}
+      <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-40 w-[92%] max-w-lg bg-white/90 backdrop-blur-md rounded-full px-5 py-2.5 border border-stone-200/50 shadow-lg flex items-center justify-between text-stone-900 animate-fade-in">
+        <span className="font-serif text-xs font-extrabold tracking-widest text-rose-950 flex items-center gap-1.5 selection:bg-transparent">
+          💍 LN &amp; TN
+        </span>
+        <div className="flex items-center gap-1.5 md:gap-3">
+          <button
+            id="nav-btn-invitation"
+            onClick={() => { window.location.hash = ''; }}
+            className={`px-3 py-1.5 rounded-full text-[11px] font-bold tracking-wide transition-all cursor-pointer ${
+              currentPage === 'invitation' 
+                ? 'bg-rose-950 text-amber-200 shadow-sm font-semibold' 
+                : 'text-stone-500 hover:text-stone-900 bg-transparent'
+            }`}
+          >
+            Thiệp Cưới 💌
+          </button>
+          <button
+            id="nav-btn-schedule"
+            onClick={() => { window.location.hash = '#schedule'; }}
+            className={`px-3 py-1.5 rounded-full text-[11px] font-bold tracking-wide transition-all cursor-pointer flex items-center gap-1 ${
+              currentPage === 'schedule'
+                ? 'bg-rose-950 text-amber-200 shadow-sm font-semibold'
+                : 'text-stone-500 hover:text-stone-900 bg-transparent'
+            }`}
+          >
+            Lịch Trình Live 🟢
+          </button>
+        </div>
+      </nav>
+
       {/* Floating Background Music Core Widget */}
       <MusicPlayer />
 
@@ -101,11 +159,11 @@ export default function App() {
 
           {/* Couples names display - Playfair style custom serif */}
           <div className="space-y-2 select-none">
-            <h1 className="font-serif text-4xl sm:text-5xl md:text-7xl font-bold tracking-wide text-white drop-shadow-md py-1">
-              Trường Xuân <span className="text-amber-400 font-serif font-light text-3xl sm:text-4xl md:text-6xl mx-1 font-serif-italic">&</span> Cô Dâu
+            <h1 className="font-serif text-3xl sm:text-4xl md:text-6xl font-bold tracking-wide text-white drop-shadow-md py-1">
+              Lê Nguyên <span className="text-amber-400 font-serif font-light text-2xl sm:text-3xl md:text-5xl mx-1 font-serif-italic">&</span> Thanh Như
             </h1>
             <p className="text-xs sm:text-sm tracking-widest font-mono text-amber-300 font-medium">
-              21 THÁNG 06 NĂM 2026 // HỘI HÔN CHUNG ĐÔI
+              01 THÁNG 07 NĂM 2026 // HỘI HÔN CHUNG ĐÔI
             </p>
           </div>
 
@@ -122,7 +180,7 @@ export default function App() {
                 <Heart className="w-4 h-4 fill-rose-600 text-rose-600 animate-pulse" />
               </div>
               <p className="text-stone-500 text-xs font-light leading-relaxed mb-5">
-                Sự hiện diện kính mời của bạn là vinh hạnh lớn nhất của gia đình hai bên Nhà Trai & Nhà Gái, cùng nhau chung vui và nâng chén rượu mừng cho ngày hạnh phúc trăm năm của Trường Xuân & Cô Dâu.
+                Sự hiện diện kính mời của bạn là vinh hạnh lớn nhất của gia đình hai bên Nhà Trai & Nhà Gái, cùng nhau chung vui và nâng chén rượu mừng cho ngày hạnh phúc trăm năm của Lê Nguyên & Thanh Như.
               </p>
               
               <button
@@ -166,17 +224,17 @@ export default function App() {
         <div className="absolute bottom-0 right-0 w-12 h-12 border-b-2 border-r-2 border-amber-500/10 rounded-br-3xl m-4 md:m-8"></div>
       </header>
 
-      {/* 2. BRIDE AND GROOM INTRO MODULE */}
-      <div id="section-couple">
+      {/* 2. BIOGRAPHY INTRO DETAIL PANEL */}
+      <section id="groom-bride-intro" className="bg-white">
         <GroomBrideIntro groom={groomInfo} bride={brideInfo} />
-      </div>
+      </section>
 
       {/* 3. INTERACTIVE LOVE STORY TIME-AXIS (CÂU CHUYỆN TÌNH YÊU) */}
       <section id="love-timeline" className="py-20 px-4 bg-stone-50 border-t border-stone-200">
         <div className="max-w-4xl mx-auto">
           
           <div className="text-center mb-16 relative">
-            <span className="text-amber-600 font-serif italic text-lg block mb-2 tracking-wide font-medium">Hành trình 5 năm</span>
+            <span className="text-amber-600 font-serif italic text-lg block mb-2 tracking-wide font-medium">Hành trình 1 năm</span>
             <h2 className="font-serif text-3xl md:text-4xl text-rose-950 font-bold tracking-tight inline-block relative pb-4">
               Câu Chuyện Tình Yêu
               <div className="absolute bottom-0 left-1/4 right-1/4 h-[1.5px] bg-gradient-to-r from-transparent via-amber-500 to-transparent"></div>
@@ -191,22 +249,22 @@ export default function App() {
             
             {[
               {
-                date: 'Tháng 10 / 2021',
+                date: 'Tháng 3 / 2026',
                 title: 'Lần Đầu Gặp Gỡ 👋',
-                desc: 'Chúng tôi quen nhau trong một dự án phát triển sáng tạo tại Hà Nội. Trường Xuân là một lập trình viên khô khan, còn Cô Dâu là cô nhà thiết kế mộng mơ, tràn ngập năng lượng tích cực.'
+                desc: 'Chúng tôi gặp gỡ và quen biết nhau tại FSoft Hồ Chí Minh. Tình cờ đi ăn chung, tình cờ chạm mắt nhau và trúng tiếng sét ái tình.'
               },
               {
-                date: 'Tháng 02 / 2022',
-                title: 'Lời Tỏ Tình Ngọt Ngào ❤️',
-                desc: 'Trong cái se lạnh của mùa xuân Hà Nội, Trường Xuân đã thu hết can đảm để tỏ tình với Cô Dâu dưới tháp cổ kính. Sự thấu hiểu dần gắn kết hai trái tim thành một nhịp.'
+                date: 'Tháng 5 / 2026',
+                title: 'Lời Tỏ Tình Ngọc Ngào ❤️',
+                desc: 'Trong 1 ngày mưa tầm tã ở Sài Gòn, Lê Nguyên đã thu hết can đảm để tỏ tình với Thanh Như trước khi nghỉ việc. Sự thấu hiểu dần gắn kết hai trái tim thành một nhịp.'
               },
               {
-                date: 'Tháng 12 / 2025',
+                date: 'Tháng 6 / 2026',
                 title: 'Chiếc Nhẫn Cầu Hôn Của Anh 💍',
-                desc: 'Trên bãi cát vàng Phú Quốc lãng mạn dưới hoàng hôn rực rỡ, Trường Xuân quỳ gối trao chiếc nhẫn nhỏ xinh, Cô Dâu rưng rưng đồng ý cùng anh xây dựng tổ ấm vững bền.'
+                desc: 'Trên thành phố Đà Lạt lãng mạn dưới nắng hoàng hôn rực rỡ, Lê Nguyên quỳ gối trao chiếc nhẫn nhỏ xinh, Thanh Như rưng rưng đồng ý cùng anh xây dựng tổ ấm vững bền.'
               },
               {
-                date: 'Tháng 06 / 2026',
+                date: 'Tháng 07 / 2026',
                 title: 'Ngày Trái Ngọt Trăm Năm Cưới Hỏi 🎉',
                 desc: 'Một đám cưới ấm cúng ghi nhận tình yêu ngọt ngào của chúng tôi. Kính mời toàn thể người thân và bè bạn đến chúc phúc cho hôn nhân trăm năm hòa hợp!'
               }
@@ -264,7 +322,7 @@ export default function App() {
           <div className="w-8 h-[1px] bg-stone-800 mx-auto"></div>
 
           <div className="text-[11px] font-mono uppercase tracking-widest text-amber-400 font-semibold">
-            Trường Xuân & Cô Dâu
+            Lê Nguyên &amp; Thanh Như
           </div>
 
           <p className="text-[10px] text-stone-600 font-mono pt-4 leading-none">
